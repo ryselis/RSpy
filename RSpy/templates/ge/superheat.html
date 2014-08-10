@@ -1,0 +1,20 @@
+{% extends 'index.html' %}
+
+{% block body %}
+    <table>
+    <thead>
+    <tr>
+        <th>Item name</th>
+        <th>Item price</th>
+        <th>High alchemy profit</th>
+    </tr>
+    </thead>
+    {% for item in items %}
+        <tr>
+        <td>{{ item.item.name }}</td>
+        <td>{{ item.item.price_info.exact }}</td>
+        <td>{{ item.highalch_profit }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
