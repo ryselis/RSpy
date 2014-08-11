@@ -24,12 +24,19 @@ class Migration(DataMigration):
             index2 = html[index1:].find('<td>')
             index3 = html[index1:][index2:].find('</td>')
             price = html[index1+index2:index1+index2+index3].replace('<td> ', '').replace('&#160;coins\n', '')
+            price = price.replace('&#160;coin\n', '')
             try:
+                price = price.replace(',', '').split(' ')[-1]
+                if not price:
+                    price = '0'
                 price = int(price)
                 ItemAddition.objects.create(id=item.id,
                                             high_alch_price=price)
             except ValueError:
+                import pdb; pdb.set_trace()
                 print 'item not found: %s' % item.name
+            else:
+                print 'item done: %s' % item.name
 
     def backwards(self, orm):
         "Write your backwards methods here."
