@@ -1,9 +1,15 @@
 {% extends 'index.html' %}
+{% load staticfiles %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'superheat.css' %}">
+{% endblock %}
 
 {% block body %}
     <table>
     <thead>
     <tr>
+        <th>#</th>
         <th>Item name</th>
         <th>Item price</th>
         <th>High alchemy profit</th>
@@ -11,9 +17,10 @@
     </thead>
     {% for item in items %}
         <tr>
-        <td>{{ item.item.name }}</td>
-        <td>{{ item.item.price_info.exact }}</td>
-        <td>{{ item.highalch_profit }}</td>
+        <td>{{ forloop.counter }}</td>
+        <td><a class="link" href="http://runescape.wikia.com/wiki/{{ item.item.name }}">{{ item.item.name }}</a></td>
+        <td class="number">{{ item.item.price_info.exact }}</td>
+        <td class="number">{{ item.highalch_profit }}</td>
         </tr>
     {% endfor %}
     </table>

@@ -26,15 +26,20 @@ class Migration(DataMigration):
             price = html[index1+index2:index1+index2+index3].replace('<td> ', '').replace('&#160;coins\n', '')
             price = price.replace('&#160;coin\n', '')
             try:
-                price = price.replace(',', '').split(' ')[-1]
-                if not price:
-                    price = '0'
+                split = price.replace(',', '').replace('gp', '').split(' ')
+                price = '0'
+                for p in split[::-1]:
+                    try:
+                        price = int(p)
+                        break
+                    except ValueError:
+                        continue
                 price = int(price)
                 ItemAddition.objects.create(id=item.id,
                                             high_alch_price=price)
             except ValueError:
                 import pdb; pdb.set_trace()
-                print 'item not found: %s' % item.name
+                print 'item not found: %s %s coins' % (item.name, price)
             else:
                 print 'item done: %s' % item.name
 
