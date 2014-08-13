@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 import json
 from urllib2 import urlopen
+import datetime
 
 
 class ItemNotFoundError(Exception):
@@ -20,6 +21,7 @@ class Item():
     TYPE_AMMO = 'Ammo'
 
     all_items = None
+    last_update = datetime.datetime.now() - datetime.timedelta(hours=1)
 
     def __init__(self, datadict):
         self.id = datadict['id']
@@ -33,7 +35,8 @@ class Item():
 
     @classmethod
     def all(cls):
-        if not cls.all_items:
+        if not cls.all_items or cls.last_update + datetime.timedelta(hours=1) < datetime.datetime.now():
+            cls.last_update = datetime.datetime.now()
             id_list_response = urlopen(cls.ID_LIST_URL).read()
             id_list_response_json = json.loads(id_list_response)
             id_list = [str(x['id']) for x in id_list_response_json]

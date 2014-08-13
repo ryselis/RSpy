@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 
@@ -5,6 +6,7 @@
     {% block head %}
     <meta charset="UTF-8">
         {% block extrastyle %}
+            <link rel="stylesheet" href="{% static 'superheat.css' %}">
         {% endblock %}
     <title>RSpy</title>
     {% endblock %}
@@ -14,7 +16,7 @@
 {% block body %}
     <ul>
         <li>
-            <a href="/ge/highalch">High Level alchemy calculator</a>
+            <a class="link" href="/ge/highalch">High Level alchemy calculator</a>
         </li>
     </ul>
 {% endblock %}
