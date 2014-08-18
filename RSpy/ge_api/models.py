@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 import json
-from urllib2 import urlopen
+from urllib.request import urlopen
 import datetime
 
 
@@ -37,20 +37,20 @@ class Item():
     def all(cls):
         if not cls.all_items or cls.last_update + datetime.timedelta(hours=1) < datetime.datetime.now():
             cls.last_update = datetime.datetime.now()
-            id_list_response = urlopen(cls.ID_LIST_URL).read()
-            id_list_response_json = json.loads(id_list_response)
+            id_list_response = urlopen(cls.ID_LIST_URL).readall().decode('utf-8')
+            id_list_response_json = json.loads(str(id_list_response))
             id_list = [str(x['id']) for x in id_list_response_json]
             all_items = []
             id_list_length = len(id_list)
-            ranges = id_list_length / 100
-            for i in xrange(ranges):
+            ranges = id_list_length // 100
+            for i in range(ranges):
                 start, end = i * 100, (i + 1) * 100
                 sliced_ids = id_list[start:end]
                 joined_sliced_ids = ','.join(sliced_ids)
                 item_list_url = cls.ITEM_LIST_URL % {
                     'ids': joined_sliced_ids
                 }
-                item_list_response = urlopen(item_list_url).read()
+                item_list_response = urlopen(item_list_url).readall().decode('utf-8')
                 item_json = json.loads(item_list_response)
                 all_items.extend([cls(x) for x in item_json])
             cls.all_items = all_items
@@ -66,7 +66,7 @@ class Item():
             return filter_passed
 
         all_items = cls.all()
-        return filter(filter_func, all_items)
+        return list(filter(filter_func, all_items))
 
     @classmethod
     def get(cls, **kwargs):
